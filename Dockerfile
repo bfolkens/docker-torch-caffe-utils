@@ -6,7 +6,7 @@ ENV CAFFE_PACKAGES libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev \
   libboost-all-dev libhdf5-serial-dev protobuf-compiler gfortran libjpeg62 \
   libfreeimage-dev libopenblas-dev git python-dev python-pip libgoogle-glog-dev \
   libbz2-dev libxml2-dev libxslt-dev libffi-dev libssl-dev libgflags-dev \
-  liblmdb-dev python-yaml python-numpy
+  liblmdb-dev python-yaml python-numpy luarocks
 
 ENV FBLUALIB_PACKAGES git unzip curl wget g++ automake autoconf autoconf-archive libtool \
   libboost-all-dev libevent-dev libdouble-conversion-dev libgoogle-glog-dev \
@@ -66,10 +66,23 @@ RUN git clone -b v0.24.0  --depth 1 https://github.com/facebook/fbthrift.git && 
 
 RUN git clone -b v1.0 https://github.com/facebook/thpp && \
     cd thpp/thpp && \
+    wget -O build.sh https://raw.githubusercontent.com/facebook/thpp/master/thpp/build.sh && \
+    sed -ie 's/gtest-1.7.0/googletest-release-1.7.0/g' CMakeLists.txt && \
     ./build.sh
 
-RUN git clone -b v1.0 https://github.com/soumith/fblualib && \
+RUN git clone -b v1.0 https://github.com/facebook/fblualib && \
     cd fblualib/fblualib && \
+    sed -ie 's/" # python/ python"/g' build.sh && \
+    curl "https://gist.githubusercontent.com/bfolkens/7857d8397ab560fca121b71cc7593174/raw/312f32345064a71fecad52ba591ed1ed0d58edca/fix_numpy_not_found_error.patch" | patch -p0 && \
     ./build.sh
+
+RUN git clone https://github.com/facebook/fbtorch.git && \
+    cd fbtorch && \
+    luarocks make rocks/fbtorch-scm-1.rockspec
+
+RUN git clone https://github.com/facebook/fbnn.git && \
+    cd fbnn && \
+    luarocks make rocks/fbnn-scm-1.rockspec
 
 RUN git clone https://github.com/facebook/fb-caffe-exts.git
+
