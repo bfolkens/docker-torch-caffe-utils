@@ -84,5 +84,6 @@ RUN git clone https://github.com/facebook/fbnn.git && \
     cd fbnn && \
     luarocks make rocks/fbnn-scm-1.rockspec
 
-RUN git clone https://github.com/facebook/fb-caffe-exts.git
-
+RUN git clone https://github.com/facebook/fb-caffe-exts.git && \
+    luarocks install lualogging && \
+    grep -Rl fb.util.logging torch2caffe | while read i; do sed -ie 's/fb.util.logging/logging/g' $i; done
