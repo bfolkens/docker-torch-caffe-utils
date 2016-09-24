@@ -13,7 +13,7 @@ ENV FBLUALIB_PACKAGES git unzip curl wget g++ automake autoconf autoconf-archive
   libgflags-dev liblz4-dev liblzma-dev libsnappy-dev make \
   zlib1g-dev binutils-dev libjemalloc-dev flex bison libkrb5-dev libsasl2-dev \
   libnuma-dev pkg-config libssl-dev libedit-dev libmatio-dev libpython-dev \
-  libpython3-dev python-numpy
+  python-numpy
 
 RUN apt-get update && \
     apt-get install -y git wget build-essential ${CAFFE_PACKAGES} ${FBLUALIB_PACKAGES} && \
@@ -73,7 +73,7 @@ RUN git clone -b v1.0 https://github.com/facebook/thpp && \
 RUN git clone -b v1.0 https://github.com/facebook/fblualib && \
     cd fblualib/fblualib && \
     sed -ie 's/" # python/ python"/g' build.sh && \
-    curl "https://gist.githubusercontent.com/bfolkens/7857d8397ab560fca121b71cc7593174/raw/312f32345064a71fecad52ba591ed1ed0d58edca/fix_numpy_not_found_error.patch" | patch -p0 && \
+    sed -ie 's/PythonLibs/PythonLibs 2.7/g' python/CMakeLists.txt && \
     ./build.sh
 
 RUN git clone https://github.com/facebook/fbtorch.git && \
@@ -83,7 +83,14 @@ RUN git clone https://github.com/facebook/fbtorch.git && \
 RUN git clone https://github.com/facebook/fbnn.git && \
     cd fbnn && \
     luarocks make rocks/fbnn-scm-1.rockspec
-
+   
 RUN git clone https://github.com/facebook/fb-caffe-exts.git && \
     luarocks install lualogging && \
+    cd fb-caffe-exts && \
     grep -Rl fb.util.logging torch2caffe | while read i; do sed -ie 's/fb.util.logging/logging/g' $i; done
+
+# Patch broken paths in th 
+RUN cd /root/torch/install/bin && \
+    curl "https://gist.githubusercontent.com/bfolkens/13927488717b525fdd1dce87fab3db89/raw/abdc98e14febe648909556c8d0fcf6644fe223fd/fix_torch2caffe_lib_py_load_error.patch" | patch -p0 
+
+
