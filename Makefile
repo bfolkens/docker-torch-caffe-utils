@@ -2,7 +2,7 @@ LOCAL_NAME=caffe-torch-conversion-utils
 VERSION=latest
 PUBLIC_NAME=caffe-torch-conversion-utils
 REPOSITORY=bfolkens
-DOCKER=sudo docker
+DOCKER=sudo nvidia-docker
 
 .PHONY: all build tag release 
 
