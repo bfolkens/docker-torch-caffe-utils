@@ -6,14 +6,13 @@ ENV CAFFE_PACKAGES libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev \
   libboost-all-dev libhdf5-serial-dev protobuf-compiler gfortran libjpeg62 \
   libfreeimage-dev libopenblas-dev git python-dev python-pip libgoogle-glog-dev \
   libbz2-dev libxml2-dev libxslt-dev libffi-dev libssl-dev libgflags-dev \
-  liblmdb-dev python-yaml python-numpy luarocks
+  liblmdb-dev python-yaml luarocks
 
 ENV FBLUALIB_PACKAGES git unzip curl wget g++ automake autoconf autoconf-archive libtool \
   libboost-all-dev libevent-dev libdouble-conversion-dev libgoogle-glog-dev \
   libgflags-dev liblz4-dev liblzma-dev libsnappy-dev make \
   zlib1g-dev binutils-dev libjemalloc-dev flex bison libkrb5-dev libsasl2-dev \
-  libnuma-dev pkg-config libssl-dev libedit-dev libmatio-dev libpython-dev \
-  python-numpy
+  libnuma-dev pkg-config libssl-dev libedit-dev libmatio-dev libpython-dev
 
 RUN apt-get update && \
     apt-get install -y git wget build-essential ${CAFFE_PACKAGES} ${FBLUALIB_PACKAGES} && \
@@ -92,5 +91,4 @@ RUN git clone https://github.com/facebook/fb-caffe-exts.git && \
 # Patch broken paths in th 
 RUN cd /root/torch/install/bin && \
     curl "https://gist.githubusercontent.com/bfolkens/13927488717b525fdd1dce87fab3db89/raw/abdc98e14febe648909556c8d0fcf6644fe223fd/fix_torch2caffe_lib_py_load_error.patch" | patch -p0 
-
 
