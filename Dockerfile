@@ -90,5 +90,5 @@ RUN git clone https://github.com/facebook/fb-caffe-exts.git && \
 
 # Patch broken paths in th 
 RUN cd /root/torch/install/bin && \
-    curl "https://gist.githubusercontent.com/bfolkens/13927488717b525fdd1dce87fab3db89/raw/abdc98e14febe648909556c8d0fcf6644fe223fd/fix_torch2caffe_lib_py_load_error.patch" | patch -p0 
+    curl "https://gist.githubusercontent.com/bfolkens/13927488717b525fdd1dce87fab3db89/raw/ffdcf90725b008e2a663655621464efb9e00feab/fix_torch2caffe_lib_py_load_error.patch" | patch -p0 
 
